@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Life Expectancy vs GDP Dashboard</title>
+  <link rel="stylesheet" href="./style.css" />
+</head>
+
+<body>
+  <h1 style="text-align:center">
+    Life Expectancy vs GDP per Capita (1990-2023)
+  </h1>
+
+  <div id="controls" class="responsive-svg-container">
+    <label for="yearSlider"><strong>Year:</strong></label>
+    <input id="yearSlider" type="range" min="1990" max="2023" value="2023" />
+    <span id="yearLabel">2023</span>
+  </div>
+
+  <div class="dashboard">
+    <div id="scatter" class="panel"></div>
+    <div id="countrybars" class="panel"></div>
+    <div id="regionchart" class="panel"></div>
+    <div id="topchart" class="panel"></div>
+  </div>
+
+  <div id="tooltip" class="tooltip"></div>
+
+  <script src="./d3.js"></script>
+  <script src="./script.js"></script>
+</body>
+</html>

@@ -1,0 +1,64 @@
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0 10px 16px 10px;
+}
+
+.responsive-svg-container {
+  margin: 0 auto;
+  width: 100%;
+  max-width: 1200px;
+}
+
+#controls{
+  max-width: 1200px;
+  margin: 0 auto 12px auto;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+#yearSlider{
+  width: 360px;
+}
+
+.dashboard{
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  grid-template-rows: auto auto;
+  gap: 14px;
+  align-items: start;
+}
+
+.panel{
+  border: 1px solid #e5e5e5;
+  border-radius: 12px;
+  padding: 10px;
+  background: #fff;
+}
+
+/* Tooltip floating near mouse */
+.tooltip {
+  position: fixed;
+  background: #fff;
+  border: 1px solid #000;
+  padding: 6px 8px;
+  font-size: 12px;
+  border-radius: 6px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  opacity: 0;
+  pointer-events: none;
+  z-index: 9999;
+}
+
+.selected-dot{
+  stroke: #000;
+  stroke-width: 3px;
+}
+
+.chart-title{
+  font-size: 14px;
+  font-weight: 600;
+}
