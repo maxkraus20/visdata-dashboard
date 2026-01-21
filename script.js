@@ -1,18 +1,18 @@
 const DATA_PATH = "./data/life-expectancy-un-vs-gdp-per-capita-wb.csv";
 
-// ---------------- Global state ----------------
+// global state
 let fullData = [];
-let selectedCountry = null; // {code, entity}
+let selectedCountry = null;
 
-// ---------------- Tooltip ----------------
+// tooltip
 const tooltip = d3.select("#tooltip");
 
-// ---------------- Year controls ----------------
+// yearslider
 const slider = d3.select("#yearSlider");
 const yearLabel = d3.select("#yearLabel");
 
 // =====================================================
-// VIEW 1: SCATTER (Year-dependent) + click selects a country
+// SCATTER (with year)
 // =====================================================
 const scatterCfg = {
   margin: { top: 30, right: 20, bottom: 45, left: 70 },
@@ -28,7 +28,7 @@ scatterSvg.append("text")
   .attr("class", "chart-title")
   .attr("x", scatterCfg.margin.left)
   .attr("y", 18)
-  .text("Scatter: click a country (links to bar chart)");
+  .text("Click a country (updates bar chart)");
 
 const xScale = d3.scaleLog()
   .range([scatterCfg.margin.left, scatterCfg.width - scatterCfg.margin.right]);
@@ -60,7 +60,7 @@ scatterSvg.append("text")
 const dotsG = scatterSvg.append("g");
 
 // =====================================================
-// VIEW 2: BAR (Selected country over time) - linked
+// BAR CHART
 // =====================================================
 const countryCfg = {
   margin: { top: 45, right: 16, bottom: 45, left: 70 },
@@ -99,7 +99,7 @@ const cyAxisG = countrySvg.append("g")
   .attr("transform", `translate(${countryCfg.margin.left}, 0)`);
 
 // =====================================================
-// VIEW 3: REGION BAR
+// REGION BAR
 // =====================================================
 const regionCfg = {
   margin: { top: 35, right: 16, bottom: 35, left: 140 },
@@ -131,7 +131,7 @@ const ryAxisG = regionSvg.append("g")
   .attr("transform", `translate(${regionCfg.margin.left}, 0)`);
 
 // =====================================================
-// VIEW 4: TOP 10 COUNTRIES (per year)
+// TOP 10 COUNTRIES (with year)
 // =====================================================
 const topCfg = {
   margin: { top: 35, right: 16, bottom: 35, left: 140 },
@@ -163,7 +163,7 @@ const tyAxisG = topSvg.append("g")
   .attr("transform", `translate(${topCfg.margin.left}, 0)`);
 
 // =====================================================
-// Load + clean data, then render
+// loading, cleaning, rendering
 // =====================================================
 d3.csv(DATA_PATH, d => ({
   entity: d["Entity"],
@@ -196,7 +196,7 @@ d3.csv(DATA_PATH, d => ({
   xAxisG.call(d3.axisBottom(xScale).ticks(10));
   yAxisG.call(d3.axisLeft(yScale));
 
-  // set slider range to actual years
+  // set slider range
   const years = Array.from(new Set(fullData.map(d => d.year))).sort((a,b)=>a-b);
   slider.attr("min", years[0]).attr("max", years[years.length - 1]);
 
@@ -219,7 +219,7 @@ d3.csv(DATA_PATH, d => ({
 }).catch(err => console.error(err));
 
 // =====================================================
-// Draw all year-dependent views (Scatter + Region + Top10)
+// Draw year-dependent views
 // =====================================================
 function drawAll(year){
   drawScatter(year);
@@ -227,7 +227,7 @@ function drawAll(year){
   drawTop10(year);
 }
 
-// ---------------- Scatter draw ----------------
+// Scatter draw
 function drawScatter(year){
   const yearData = fullData.filter(d => d.year === year);
 
@@ -279,7 +279,7 @@ function drawScatter(year){
   );
 }
 
-// ---------------- Selected country bars ----------------
+// Selected country bars
 function initEmptyCountryBars(){
   cx.domain([]);
   cy.domain([0, 100]);
@@ -293,16 +293,12 @@ function drawCountryBars(code, name){
     .filter(d => d.code === code && d.year >= 1990 && d.year <= 2023)
     .sort((a,b) => a.year - b.year);
 
-  // OPTIONAL: reduce bars for readability on small panel
-  // comment this out if you want every year
-  series = series.filter(d => d.year % 2 === 0); // every 2nd year
-
   if (series.length === 0) {
     countryTitle.text("No data for selected country");
     return;
   }
 
-  countryTitle.text(`${name} (1990–2023)`);
+  countryTitle.text(`${name} (1990-2023)`);
 
   cx.domain(series.map(d => d.year));
   cy.domain([
@@ -339,7 +335,7 @@ function drawCountryBars(code, name){
   );
 }
 
-// ---------------- Region bars (mean lifeExp by region) ----------------
+// Region bars
 function drawRegionBars(year){
   const yearData = fullData.filter(d => d.year === year && d.region);
 
@@ -358,7 +354,6 @@ function drawRegionBars(year){
   rxAxisG.call(d3.axisBottom(rx).ticks(6));
   ryAxisG.call(d3.axisLeft(ry));
 
-  // FIX: baseline must be domain-min, not 0
   const rMin = rx.domain()[0];
 
   const bars = regionSvg.selectAll("rect.regionbar")
@@ -389,12 +384,11 @@ const topTitle = topSvg.append("text")
   .attr("y", 18)
   .text("Top 10 life expectancy");
 
-// ---------------- Top 10 countries (highest lifeExp) ----------------
+// Top 10 countries
 function drawTop10(year){
   topTitle.text(`Top 10 life expectancy (${year})`);
   const yearData = fullData.filter(d => d.year === year && d.entity);
 
-  // ensure unique country entries by code (just in case)
   const byCode = new Map();
   yearData.forEach(d => { if (d.code) byCode.set(d.code, d); });
 
@@ -414,7 +408,6 @@ function drawTop10(year){
   txAxisG.call(d3.axisBottom(tx).ticks(5));
   tyAxisG.call(d3.axisLeft(ty).tickSizeOuter(0));
 
-  // FIX: baseline must be domain-min, not 0
   const tMin = tx.domain()[0];
 
   const bars = topSvg.selectAll("rect.topbar")
