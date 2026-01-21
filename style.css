@@ -39,7 +39,6 @@ body {
   background: #fff;
 }
 
-/* Tooltip floating near mouse */
 .tooltip {
   position: fixed;
   background: #fff;

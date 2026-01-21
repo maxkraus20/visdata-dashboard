@@ -115,7 +115,7 @@ regionSvg.append("text")
   .attr("class", "chart-title")
   .attr("x", regionCfg.margin.left)
   .attr("y", 18)
-  .text("Region averages (in 2023)");
+  .text("Region averages (in 2023)"); // just 2023 bc data only has region values in that year
 
 const rx = d3.scaleLinear()
   .range([regionCfg.margin.left, regionCfg.width - regionCfg.margin.right]);
@@ -175,12 +175,12 @@ d3.csv(DATA_PATH, d => ({
   region: d["World regions according to OWID"]
 })).then(data => {
   fullData = data.filter(d =>
-    d.year >= 1990 && d.year <= 2023 &&
+    d.year >= 1990 && d.year <= 2023 && // most data in that range
     !isNaN(d.year) &&
     !isNaN(d.lifeExp) && d.lifeExp > 0 &&
     !isNaN(d.gdp) && d.gdp > 0 &&
     !isNaN(d.population) && d.population > 0 &&
-    d.code && d.code.length === 3
+    d.code && d.code.length === 3 // only country data
 
   );
 
